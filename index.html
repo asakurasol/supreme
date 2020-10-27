@@ -1,212 +1,436 @@
-class Judge {
-    constructor(name, age, isMale, stance, isAlive = true) {
-        this.name = name;
-        this.age = age;
-        this.isMale = isMale
-        this.stance = stance;
-        this.isAlive = isAlive;
-        this.maleDR = {'26':0.001665,'27':0.001717,'28':0.001767,'29':0.001817,'30':0.001865,'31':0.001911,'32':0.00196,'33':0.002014,'34':0.002071,'35':0.002138,'36':0.002211,'37':0.002279,'38':0.002342,'39':0.002405,'40':0.002482,'41':0.002583,'42':0.00271,'43':0.00287,'44':0.003064,'45':0.003285,'46':0.003538,'47':0.003834,'48':0.004178,'49':0.004569,'50':0.004997,'51':0.005462,'52':0.005971,'53':0.006526,'54':0.007125,'55':0.007766,'56':0.008445,'57':0.009156,'58':0.009897,'59':0.010671,'60':0.011519,'61':0.012419,'62':0.013307,'63':0.014164,'64':0.015032,'65':0.016013,'66':0.017138,'67':0.018362,'68':0.019693,'69':0.021174,'70':0.022889,'71':0.024869,'72':0.027095,'73':0.029587,'74':0.032394,'75':0.035668,'76':0.039396,'77':0.043453,'78':0.047826,'79':0.052649,'80':0.058206,'81':0.064581,'82':0.071657,'83':0.079465,'84':0.088141,'85':0.097854,'86':0.108747,'87':0.120919,'88':0.134425,'89':0.149273,'90':0.165452,'91':0.182935,'92':0.201679,'93':0.221637,'94':0.242747,'95':0.263672,'96':0.284014,'97':0.303355,'98':0.321268,'99':0.337332,'100':0.354198,'101':0.371908,'102':0.390503,'103':0.410029,'104':0.43053,'105':0.452057,'106':0.474659,'107':0.498392,'108':0.523312,'109':0.549478,'110':0.576951,'111':0.605799,'112':0.636089,'113':0.667893,'114':0.701288,'115':0.736353,'116':0.77317,'117':0.811829,'118':0.85242,'119':0.895041};
-        this.femaleDR = {'26':0.000646,'27':0.000684,'28':0.000729,'29':0.000779,'30':0.000833,'31':0.000887,'32':0.000939,'33':0.000988,'34':0.001034,'35':0.001085,'36':0.001143,'37':0.001205,'38':0.001271,'39':0.001345,'40':0.001429,'41':0.001524,'42':0.00163,'43':0.001748,'44':0.001881,'45':0.002029,'46':0.002195,'47':0.002386,'48':0.002605,'49':0.002851,'50':0.003118,'51':0.003403,'52':0.003714,'53':0.004052,'54':0.004415,'55':0.004813,'56':0.005233,'57':0.005647,'58':0.006043,'59':0.006441,'60':0.006886,'61':0.007391,'62':0.007931,'63':0.008508,'64':0.009142,'65':0.009874,'66':0.010717,'67':0.01166,'68':0.012711,'69':0.013894,'70':0.015285,'71':0.016878,'72':0.018607,'73':0.020466,'74':0.022522,'75':0.024929,'76':0.027729,'77':0.030855,'78':0.034321,'79':0.038211,'80':0.042771,'81':0.047992,'82':0.053678,'83':0.05981,'84':0.066584,'85':0.074258,'86':0.083053,'87':0.093123,'88':0.10454,'89':0.117305,'90':0.131392,'91':0.146753,'92':0.163331,'93':0.181064,'94':0.199886,'95':0.218908,'96':0.237815,'97':0.256265,'98':0.273894,'99':0.290328,'100':0.307747,'101':0.326212,'102':0.345785,'103':0.366532,'104':0.388524,'105':0.411835,'106':0.436546,'107':0.462738,'108':0.490503,'109':0.519933,'110':0.551129,'111':0.584196,'112':0.619248,'113':0.656403,'114':0.695787,'115':0.736353,'116':0.77317,'117':0.811829,'118':0.85242,'119':0.895041};
-    }
-    
-    ageForward(eventLog){
-        this.age++;
-        var deathRate;
-        if(this.isMale) {
-            deathRate = this.maleDR[this.age];
-        } else {
-            deathRate = this.femaleDR[this.age];
-        }
-        var rand = Math.random(0,1);
-        if(rand < deathRate) {
-         this.isAlive = false;
-         eventLog.push(this.name + 'died');
-        }
-    }
-    
-}
+<html>
+  <head>
+    <link rel="stylesheet" src="court.css">
+    <script type="application/javascript" src="court.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+  <body class="body">
+    <div class="form-style-5">
+        <h1>Supreme Court Majority Simulation Model</h1>
+        <p> This is a simple model to simulate Supreme Court majority for the next 100 years.</p>
+        <h4>
+            Assumptions:</h4>
+            <ul class="assumptionList">
+                <li>Simulations are ran 538 times.</li>
+                <li>Amy Barret is confirmed.</li>
+                <li>Death rate is based on acturial life table.</li>
+                <li>New judge is between 45 to 65 years old.</li>
+                <li>New judge has 70% chance to be male.</li>
+                <li>No appointment on election year.</li>
+                <li>If President and Senate has split party preference a judge matching the president's preference will be confirmed.</li>
+            </ul>
+        <form>
+        <fieldset>
+            <legend><span class="number">1</span> President Parameters</legend>
+            <h4>President Party Probability For Each Election</h4>
+            <div>
+                Democrat: <span id="dPresident">50</span>
+            </div>
+            <div>
+                Republican: <span id="rPresident">50</span>
+            </div>
+            <div class="slidecontainer">
+                <span>D
+                <input type="range" min="40" max="60" value="50" class="slider" id="presidentRange">R</span>
+            </div>   
+            <h4>
+                Starting president in 2021
+            </h4>
+            
+            <label for="president">Choose the president:</label>
 
-class Senate {
-    constructor(conservativeMajority = 0.52, isConservative = true){
-        this.conservativeMajority = conservativeMajority;
-        this.isConservative = isConservative;
-    }
-    
-    age(){
-     var rand = Math.random();
-     if(rand <= this.conservativeMajority){
-         this.isConservative = true
-     } else {
-         this.isConservative = false;
+            <select name="president" id="president">
+              <option value="trump">Donald Trump</option>
+              <option value="biden">Joe Biden</option>
+            </select>
+            
+        </fieldset>
+        <fieldset>
+            <legend><span class="number">2</span> Senate Parameters</legend>
+            <h4>Senate Party Probability For Each Election</h4>
+            <p>Note thate the senate is more likely to <a href="https://fivethirtyeight.com/features/the-senates-rural-skew-makes-it-very-hard-for-democrats-to-win-the-supreme-court/">lean republican</a></p>
+            <div>
+                Democrat:  <span id="dSenate">48</span>
+            </div>
+            <div>
+               Republican: <span id="rSenate">52</span>
+            </div>
+            <div class="slidecontainer">
+                <span>D
+                <input type="range" min="40" max="60" value="52" class="slider" id="senateRange">R</span>
+            </div>  
+            <h4>
+                Starting senate in 2021
+            </h4>
+            
+            <label for="senate">Choose the senate:</label>
+
+            <select name="senate" id="senate">
+              <option value="d">Democrat</option>
+              <option value="r">Republican</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <legend><span class="number">3</span> Other Parameters</legend>
+            <h4>
+                Allow moderates
+            </h4>
+            
+            <p> If set to true, instead of just liberal and conservative there will also be "Moderate" judges. Justice Robert will be considered a "Moderate". When the President and the Senate has split party preferences, a moderate will be appointed.</p>
+            
+            <label for="moderate">Choose whether or not to allow moderates:</label>
+
+            <select name="moderate" id="moderate">
+              <option value="false">False</option>
+              <option value="true">True</option>
+            </select>
+        </fieldset>
+            <input id="simulate" type="button" value="Simulate" />
+        </form>
+        
+        <div class="results hidden" id="results">
+            <h2>Results</h2>
+            <p>Average years of conservative majority (if ever lost): <strong><span id="consMajResult"></span<></strong></p>
+            <p>Probability that liberal never gained majority after 100 years: <strong><span id="probLibResult"></span<></strong></p>
+            <p>Representation Average After <i>25</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="25lib">
+                            Liberal
+                        </td>
+                        <td id="25con">
+                            Conservative
+                        </td>
+                        <td id="25mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+            <p>Representation Average After <i>50</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="50lib">
+                            Liberal
+                        </td>
+                        <td id="50con">
+                            Conservative
+                        </td>
+                        <td id="50mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+            <p>Representation Average After <i>100</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="100lib">
+                            Liberal
+                        </td>
+                        <td id="100con">
+                            Conservative
+                        </td>
+                        <td id="100mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+        </div>
+    </div>
+  </body>
+  <script>
+  const simulationTimes = 538;
+     function initiatePresidentSlider(){
+        var pSlider = document.getElementById("presidentRange");
+        var dOutput= document.getElementById("dPresident");
+        var rOutput= document.getElementById("rPresident");
+        
+        // Update the current slider value (each time you drag the slider handle)
+        pSlider.oninput = function() {
+          dOutput.innerHTML = 100 - this.value;
+          rOutput.innerHTML = this.value;
+        }   
      }
-    }
-}
-
-class President {
-    constructor(conservativeMajority = 0.50, isConservative = true){
-        this.conservativeMajority = conservativeMajority;
-        this.isConservative = isConservative;
-    }
-    
-    age(){
-     var rand = Math.random();
-     if(rand <= this.conservativeMajority){
-         this.isConservative = true
-     } else {
-         this.isConservative = false;
+     function initiateSenateSlider(){
+        var pSlider = document.getElementById("senateRange");
+        var dOutput= document.getElementById("dSenate");
+        var rOutput= document.getElementById("rSenate");
+        
+        // Update the current slider value (each time you drag the slider handle)
+        pSlider.oninput = function() {
+          dOutput.innerHTML = 100 - this.value;
+          rOutput.innerHTML = this.value;
+        }   
      }
-    }
+     initiatePresidentSlider();
+     initiateSenateSlider();
+     
+     function simulateOnce(majorityCallback, yearcallBack){
+        let president = new President(Number(document.getElementById("presidentRange").value)/100, document.getElementById("president").value === "trump");
+        let senate = new Senate(Number(document.getElementById("senateRange").value)/100, document.getElementById("senate").value === "r");
+        let court = new Court();
+        let allowModerate = document.getElementById("moderate").value === "true"
+        court.createCurrentCourt(allowModerate);
+        let sim = new Simulation(president, senate, court, 2121, allowModerate, majorityCallback, yearcallBack);
+        sim.age();
+     }
+     
+     function simulate(){
+         let liberalMajorityResults = [];
+         let results25 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+         let results50 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+         let results100 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+        function majorityCallback(n){
+            liberalMajorityResults.push(n);
+        }
+        function yearcallBack(year, r,d,m){
+            var results;
+            switch(year){
+                case 25:
+                    results = results25;
+                    break;
+                case 50:
+                    results = results50;
+                    break;
+                case 100:
+                    results = results100;
+                    
+            }
+            results.r.push(r);
+            results.d.push(d);
+            results.m.push(m);
+        }
+        for(var i =0; i<simulationTimes; i++){
+          simulateOnce(majorityCallback, yearcallBack);   
+        }
+        updateResults(liberalMajorityResults, results25, results50, results100);
+        var element = document.getElementById("results");
+        element.classList.remove("hidden");
+        window.scrollBy(0, 500);
+     }
+     function updateResults(liberalMajorityResults, results25,results50, results100s){
+         function precise(x) {
+             return Number.parseFloat(x).toPrecision(3);
+         }
+         var consMajResult = document.getElementById("consMajResult");
+         consMajResult.innerHTML = Math.round((liberalMajorityResults.reduce((a, b) => (a + b)) / liberalMajorityResults.length),1) + ' years';
+         var probLibResult = document.getElementById("probLibResult");
+         probLibResult.innerHTML = precise(((simulationTimes-liberalMajorityResults.length)/simulationTimes)*100)+"%";
+         console.log(results25, results50, results100s);
+         [results25, results50, results100s].forEach(function(result){
+           result.r = precise(result.r.reduce((a,b)=>(a+b))/result.r.length);  
+           result.d = precise(result.d.reduce((a,b)=>(a+b))/result.d.length);  
+           result.m = precise(result.m.reduce((a,b)=>(a+b))/result.m.length);  
+         })
+         document.getElementById("25lib").innerHTML = results25.d;
+         document.getElementById("50lib").innerHTML = results50.d;
+         document.getElementById("100lib").innerHTML = results100s.d;
+         document.getElementById("25con").innerHTML = results25.r;
+         document.getElementById("50con").innerHTML = results50.r;
+         document.getElementById("100con").innerHTML = results100s.r;
+         document.getElementById("25mod").innerHTML = results25.m;
+         document.getElementById("50mod").innerHTML = results50.m;
+         document.getElementById("100mod").innerHTML = results100s.m;
+
+         
+     }
+     document.getElementById("simulate").addEventListener('click', simulate);
+  </script>
+</html>
+<style>
+#results.hidden {
+    display: none;
+}
+td {
+    text-align: center;
+}
+h1 {
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+h2 {
+    padding-top:12px;
+    border-bottom:2px solid gray;
+    text-align: center;
+   	color: #303030;
+}
+.results-table {
+    margin: auto;
+    width: 80%;
+}
+.assumptionList {
+    padding-bottom: 10px;
+    border-bottom: 1px solid gray;
+}
+.slidecontainer {
+    padding: 8px;
+}
+.slidecontainer .slider {
+    display:inline-block;
+    width: 90%;
+}
+.form-style-5{
+	max-width: 500px;
+	padding: 10px 20px;
+	background: #f4f7f8;
+	margin: 10px auto;
+	padding: 20px;
+	background: #f4f7f8;
+	border-radius: 8px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+.form-style-5 fieldset{
+	border: none;
+	color: #303030;
+}
+.form-style-5 legend {
+	font-size: 1.4em;
+	margin-bottom: 10px;
+}
+.form-style-5 label {
+	display: block;
+	margin-bottom: 8px;
+}
+.form-style-5 input[type="text"],
+.form-style-5 input[type="date"],
+.form-style-5 input[type="datetime"],
+.form-style-5 input[type="email"],
+.form-style-5 input[type="number"],
+.form-style-5 input[type="search"],
+.form-style-5 input[type="time"],
+.form-style-5 input[type="url"],
+.form-style-5 textarea,
+.form-style-5 select {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	background: rgba(255,255,255,.1);
+	border: none;
+	border-radius: 4px;
+	font-size: 15px;
+	margin: 0;
+	outline: 0;
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box; 
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box; 
+	background-color: #e8eeef;
+	color:#8a97a0;
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+	margin-bottom: 30px;
+	
+    height: 40px;
+    color:black;
+    background: white;
 }
 
-class Court {
-    constructor(judges = [], courtSize = 9){
-        this.judges = judges;
-        this.courtSize = courtSize;
-    }
-    
-    age(eventLog){
-        this.judges.forEach(judge => judge.ageForward(eventLog));
-        this.judges = this.judges.filter(judge => judge.isAlive);
-    }
-    
-    hasVacancy(){
-        return this.judges.length < this.courtSize;
-    }
-    
-    numberOfVacancy(){
-        return this.courtSize - this.judges.length;
-    }
-    
-    createCurrentCourt(allowModerate){
-        var robert;
-        if(allowModerate){
-         robert = new Judge('John Roberts', 65, true, 'Moderate');   
-        } else {
-         robert = new Judge('John Roberts', 65, true, 'Conservative');   
-        }
-        let thomas = new Judge('Clarence Thomas', 72, true, 'Conservative');
-        let breyer = new Judge('Stephen Breyer', 82, true, 'Liberal');
-        let alito = new Judge('Samuel Alito', 70, true, 'Conservative');
-        let sotomayor = new Judge('Sonia Sotomajor', 66, false, 'Liberal');
-        let kagan = new Judge('Elena Kagan', 60, false, 'Liberal');
-        let gorsuch = new Judge('Neil Gorsuch', 53, true, 'Conservative');
-        let kavanaugh = new Judge('Brett Kavanaugh', 55, true, 'Conservative');
-        let barret = new Judge('Amy Barret', 76, true, 'Conservative');
-        this.judges = [robert, alito, barret, thomas, breyer, sotomayor, kagan, gorsuch, kavanaugh];                    
-    }
-    
-    appointNewRandomJudge(stance){
-        let age = Math.floor(Math.random(0.45,0.65)*100);
-        let genderChance = Math.random(0,0.3);
-        let isMale = genderChance > 0.3 ? true : false;
-        let judgeName = 'Circut Judge ' + Math.floor(Math.random()*100).toString();
-        this.judges.push(new Judge(judgeName, age, isMale, stance));
-    }
-    
-    appointNewJudgeUntilPacked(stance){
-        let v = this.numberOfVacancy();
-        for(var i = 0; i < v; i++){
-            this.appointNewRandomJudge(stance);
-        }
-    }
-    
-    getJudgeCountByStance(stance){
-        return this.judges.filter((judge)=>judge.stance === stance).length;
-    }
-    
-    describeCurrentCourt(){
-        return "Conservative: " + this.getJudgeCountByStance("Conservative") +
-        "Liberal: " + this.getJudgeCountByStance("Liberal") +
-        "Moderate: " + this.getJudgeCountByStance("Moderate");
-    }
-    
-    isLiberalMajority(){
-        return this.getJudgeCountByStance("Liberal") > this.getJudgeCountByStance("Conservative");
-    }
+.form-style-5 .number {
+	background: #1abc9c;
+	color: #fff;
+	height: 30px;
+	width: 30px;
+	display: inline-block;
+	font-size: 0.8em;
+	margin-right: 4px;
+	line-height: 30px;
+	text-align: center;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+	border-radius: 15px 15px 15px 0px;
 }
 
-class Simulation {
-    constructor(president, senate, court, endYear = 2121, allowModerate = false, majorityCallback, yearcallback){
-        this.president = president;
-        this.senate = senate;
-        this.court = court;
-        this.year = 2021;
-        this.endYear = endYear;
-        this.eventLog = [];
-        this.allowModerate = allowModerate;
-        this.majorityCallback = majorityCallback;
-        this.hasReachedLiberalMajority = false;
-        this.yearcallback = yearcallback;
-    }
-    
-    age(){
-        //console.log("year: " + this.year);
-        this.court.age(this.eventLog);
-        if(this.allowModerate){
-         this.appoint();   
-        } else {
-         this.appointWithoutModerate()
-        }
-        
-        if(this.year % 4 === 0){
-            this.president.age();
-        }
-        if(this.year % 2 === 0) {
-            this.senate.age();
-        }
-        
-        if(this.court.isLiberalMajority() && this.hasReachedLiberalMajority === false){
-            //console.log('liberal majorty reached at year' + this.year);
-            this.majorityCallback(this.year - 2021);
-            this.hasReachedLiberalMajority = true;
-        }
-        
-        this.year++;
-        //this.eventLog.forEach(console.log);
-        let time = this.year - 2021;
-        if(time == 25 || time == 50 || time == 100){
-            this.yearcallback(time, this.court.getJudgeCountByStance('Conservative'), this.court.getJudgeCountByStance('Liberal'), this.court.getJudgeCountByStance('Moderate'))
-        }
-        this.eventLog = []
-        if(this.year < this.endYear){
-            this.age();
-        }
-    }
-    
-    appoint(){
-        if(this.court.hasVacancy()){
-            if(this.president.isConservative && this.senate.isConservative){
-                this.court.appointNewJudgeUntilPacked('Conservative');
-            } else if (!this.president.isConservative && !this.senate.isConservative) {
-                this.court.appointNewJudgeUntilPacked('Liberal');
-            } else {
-                //skip if it's election year
-                if(this.year % 4 !== 0){
-                    this.court.appointNewJudgeUntilPacked('Moderate');
-                }
-            }
-            this.eventLog.push(this.court.describeCurrentCourt());
-        }
-    }
-    
-    appointWithoutModerate(){
-        if(this.court.hasVacancy()){
-            if(this.president.isConservative && this.senate.isConservative){
-                this.court.appointNewJudgeUntilPacked('Conservative');
-            } else if (!this.president.isConservative && !this.senate.isConservative) {
-                this.court.appointNewJudgeUntilPacked('Liberal');
-            } else {
-                //skip if it's election year
-                if(this.year % 4 !== 0){
-                    if(this.president.isConservative){
-                        this.court.appointNewJudgeUntilPacked('Conservative');
-                    } else {
-                        this.court.appointNewJudgeUntilPacked('Liberal');
-                    }
-                }
-            }
-            this.eventLog.push(this.court.describeCurrentCourt());
-        }
-    }
-    
+.form-style-5 input[type="submit"],
+.form-style-5 input[type="button"]
+{
+	position: relative;
+	display: block;
+	padding: 19px 39px 18px 39px;
+	color: #FFF;
+	margin: 0 auto;
+	background: #1abc9c;
+	font-size: 18px;
+	text-align: center;
+	font-style: normal;
+	width: 100%;
+	border: 1px solid #16a085;
+	border-width: 1px 1px 3px;
+	margin-bottom: 10px;
 }
+.form-style-5 input[type="submit"]:hover,
+.form-style-5 input[type="button"]:hover
+{
+	background: #109177;
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
