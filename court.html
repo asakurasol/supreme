@@ -1,0 +1,436 @@
+<html>
+  <head>
+    <link rel="stylesheet" src="court.css">
+    <script type="application/javascript" src="court.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+  <body class="body">
+    <div class="form-style-5">
+        <h1>Supreme Court Majority Simulation Model</h1>
+        <p> This is a simple model to simulate Supreme Court majority for the next 100 years.</p>
+        <h4>
+            Assumptions:</h4>
+            <ul class="assumptionList">
+                <li>Simulations are ran 538 times.</li>
+                <li>Amy Barret is confirmed.</li>
+                <li>Death rate is based on acturial life table.</li>
+                <li>New judge is between 45 to 65 years old.</li>
+                <li>New judge has 70% chance to be male.</li>
+                <li>No appointment on election year.</li>
+                <li>If President and Senate has split party preference a judge matching the president's preference will be confirmed.</li>
+            </ul>
+        <form>
+        <fieldset>
+            <legend><span class="number">1</span> President Parameters</legend>
+            <h4>President Party Probability For Each Election</h4>
+            <div>
+                Democrat: <span id="dPresident">50</span>
+            </div>
+            <div>
+                Republican: <span id="rPresident">50</span>
+            </div>
+            <div class="slidecontainer">
+                <span>D
+                <input type="range" min="40" max="60" value="50" class="slider" id="presidentRange">R</span>
+            </div>   
+            <h4>
+                Starting president in 2021
+            </h4>
+            
+            <label for="president">Choose the president:</label>
+
+            <select name="president" id="president">
+              <option value="trump">Donald Trump</option>
+              <option value="biden">Joe Biden</option>
+            </select>
+            
+        </fieldset>
+        <fieldset>
+            <legend><span class="number">2</span> Senate Parameters</legend>
+            <h4>Senate Party Probability For Each Election</h4>
+            <p>Note thate the senate is more likely to <a href="https://fivethirtyeight.com/features/the-senates-rural-skew-makes-it-very-hard-for-democrats-to-win-the-supreme-court/">lean republican</a></p>
+            <div>
+                Democrat:  <span id="dSenate">48</span>
+            </div>
+            <div>
+               Republican: <span id="rSenate">52</span>
+            </div>
+            <div class="slidecontainer">
+                <span>D
+                <input type="range" min="40" max="60" value="52" class="slider" id="senateRange">R</span>
+            </div>  
+            <h4>
+                Starting senate in 2021
+            </h4>
+            
+            <label for="senate">Choose the senate:</label>
+
+            <select name="senate" id="senate">
+              <option value="d">Democrat</option>
+              <option value="r">Republican</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <legend><span class="number">3</span> Other Parameters</legend>
+            <h4>
+                Allow moderates
+            </h4>
+            
+            <p> If set to true, instead of just liberal and conservative there will also be "Moderate" judges. Justice Robert will be considered a "Moderate". When the President and the Senate has split party preferences, a moderate will be appointed.</p>
+            
+            <label for="moderate">Choose whether or not to allow moderates:</label>
+
+            <select name="moderate" id="moderate">
+              <option value="false">False</option>
+              <option value="true">True</option>
+            </select>
+        </fieldset>
+            <input id="simulate" type="button" value="Simulate" />
+        </form>
+        
+        <div class="results hidden" id="results">
+            <h2>Results</h2>
+            <p>Average years of conservative majority (if ever lost): <strong><span id="consMajResult"></span<></strong></p>
+            <p>Probability that liberal never gained majority after 100 years: <strong><span id="probLibResult"></span<></strong></p>
+            <p>Representation Average After <i>25</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="25lib">
+                            Liberal
+                        </td>
+                        <td id="25con">
+                            Conservative
+                        </td>
+                        <td id="25mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+            <p>Representation Average After <i>50</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="50lib">
+                            Liberal
+                        </td>
+                        <td id="50con">
+                            Conservative
+                        </td>
+                        <td id="50mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+            <p>Representation Average After <i>100</i> years</p>
+                <table class="results-table">
+                    <tr>
+                        <th>
+                            Liberal
+                        </th>
+                        <th>
+                            Conservative
+                        </th>
+                        <th>
+                            Moderate
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="100lib">
+                            Liberal
+                        </td>
+                        <td id="100con">
+                            Conservative
+                        </td>
+                        <td id="100mod">
+                            Moderate
+                        </td>
+                    </tr>
+                </table>
+        </div>
+    </div>
+  </body>
+  <script>
+  const simulationTimes = 538;
+     function initiatePresidentSlider(){
+        var pSlider = document.getElementById("presidentRange");
+        var dOutput= document.getElementById("dPresident");
+        var rOutput= document.getElementById("rPresident");
+        
+        // Update the current slider value (each time you drag the slider handle)
+        pSlider.oninput = function() {
+          dOutput.innerHTML = 100 - this.value;
+          rOutput.innerHTML = this.value;
+        }   
+     }
+     function initiateSenateSlider(){
+        var pSlider = document.getElementById("senateRange");
+        var dOutput= document.getElementById("dSenate");
+        var rOutput= document.getElementById("rSenate");
+        
+        // Update the current slider value (each time you drag the slider handle)
+        pSlider.oninput = function() {
+          dOutput.innerHTML = 100 - this.value;
+          rOutput.innerHTML = this.value;
+        }   
+     }
+     initiatePresidentSlider();
+     initiateSenateSlider();
+     
+     function simulateOnce(majorityCallback, yearcallBack){
+        let president = new President(Number(document.getElementById("presidentRange").value)/100, document.getElementById("president").value === "trump");
+        let senate = new Senate(Number(document.getElementById("senateRange").value)/100, document.getElementById("senate").value === "r");
+        let court = new Court();
+        let allowModerate = document.getElementById("moderate").value === "true"
+        court.createCurrentCourt(allowModerate);
+        let sim = new Simulation(president, senate, court, 2121, allowModerate, majorityCallback, yearcallBack);
+        sim.age();
+     }
+     
+     function simulate(){
+         let liberalMajorityResults = [];
+         let results25 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+         let results50 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+         let results100 = {
+             "r": [],
+             "d": [],
+             "m": [],
+         }
+        function majorityCallback(n){
+            liberalMajorityResults.push(n);
+        }
+        function yearcallBack(year, r,d,m){
+            var results;
+            switch(year){
+                case 25:
+                    results = results25;
+                    break;
+                case 50:
+                    results = results50;
+                    break;
+                case 100:
+                    results = results100;
+                    
+            }
+            results.r.push(r);
+            results.d.push(d);
+            results.m.push(m);
+        }
+        for(var i =0; i<simulationTimes; i++){
+          simulateOnce(majorityCallback, yearcallBack);   
+        }
+        updateResults(liberalMajorityResults, results25, results50, results100);
+        var element = document.getElementById("results");
+        element.classList.remove("hidden");
+        window.scrollBy(0, 500);
+     }
+     function updateResults(liberalMajorityResults, results25,results50, results100s){
+         function precise(x) {
+             return Number.parseFloat(x).toPrecision(3);
+         }
+         var consMajResult = document.getElementById("consMajResult");
+         consMajResult.innerHTML = Math.round((liberalMajorityResults.reduce((a, b) => (a + b)) / liberalMajorityResults.length),1) + ' years';
+         var probLibResult = document.getElementById("probLibResult");
+         probLibResult.innerHTML = precise(((simulationTimes-liberalMajorityResults.length)/simulationTimes)*100)+"%";
+         console.log(results25, results50, results100s);
+         [results25, results50, results100s].forEach(function(result){
+           result.r = precise(result.r.reduce((a,b)=>(a+b))/result.r.length);  
+           result.d = precise(result.d.reduce((a,b)=>(a+b))/result.d.length);  
+           result.m = precise(result.m.reduce((a,b)=>(a+b))/result.m.length);  
+         })
+         document.getElementById("25lib").innerHTML = results25.d;
+         document.getElementById("50lib").innerHTML = results50.d;
+         document.getElementById("100lib").innerHTML = results100s.d;
+         document.getElementById("25con").innerHTML = results25.r;
+         document.getElementById("50con").innerHTML = results50.r;
+         document.getElementById("100con").innerHTML = results100s.r;
+         document.getElementById("25mod").innerHTML = results25.m;
+         document.getElementById("50mod").innerHTML = results50.m;
+         document.getElementById("100mod").innerHTML = results100s.m;
+
+         
+     }
+     document.getElementById("simulate").addEventListener('click', simulate);
+  </script>
+</html>
+<style>
+#results.hidden {
+    display: none;
+}
+td {
+    text-align: center;
+}
+h1 {
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+h2 {
+    padding-top:12px;
+    border-bottom:2px solid gray;
+    text-align: center;
+   	color: #303030;
+}
+.results-table {
+    margin: auto;
+    width: 80%;
+}
+.assumptionList {
+    padding-bottom: 10px;
+    border-bottom: 1px solid gray;
+}
+.slidecontainer {
+    padding: 8px;
+}
+.slidecontainer .slider {
+    display:inline-block;
+    width: 90%;
+}
+.form-style-5{
+	max-width: 500px;
+	padding: 10px 20px;
+	background: #f4f7f8;
+	margin: 10px auto;
+	padding: 20px;
+	background: #f4f7f8;
+	border-radius: 8px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+.form-style-5 fieldset{
+	border: none;
+	color: #303030;
+}
+.form-style-5 legend {
+	font-size: 1.4em;
+	margin-bottom: 10px;
+}
+.form-style-5 label {
+	display: block;
+	margin-bottom: 8px;
+}
+.form-style-5 input[type="text"],
+.form-style-5 input[type="date"],
+.form-style-5 input[type="datetime"],
+.form-style-5 input[type="email"],
+.form-style-5 input[type="number"],
+.form-style-5 input[type="search"],
+.form-style-5 input[type="time"],
+.form-style-5 input[type="url"],
+.form-style-5 textarea,
+.form-style-5 select {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	background: rgba(255,255,255,.1);
+	border: none;
+	border-radius: 4px;
+	font-size: 15px;
+	margin: 0;
+	outline: 0;
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box; 
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box; 
+	background-color: #e8eeef;
+	color:#8a97a0;
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+	margin-bottom: 30px;
+	
+    height: 40px;
+    color:black;
+    background: white;
+}
+
+.form-style-5 .number {
+	background: #1abc9c;
+	color: #fff;
+	height: 30px;
+	width: 30px;
+	display: inline-block;
+	font-size: 0.8em;
+	margin-right: 4px;
+	line-height: 30px;
+	text-align: center;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+	border-radius: 15px 15px 15px 0px;
+}
+
+.form-style-5 input[type="submit"],
+.form-style-5 input[type="button"]
+{
+	position: relative;
+	display: block;
+	padding: 19px 39px 18px 39px;
+	color: #FFF;
+	margin: 0 auto;
+	background: #1abc9c;
+	font-size: 18px;
+	text-align: center;
+	font-style: normal;
+	width: 100%;
+	border: 1px solid #16a085;
+	border-width: 1px 1px 3px;
+	margin-bottom: 10px;
+}
+.form-style-5 input[type="submit"]:hover,
+.form-style-5 input[type="button"]:hover
+{
+	background: #109177;
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
