@@ -1,22 +1,54 @@
 <html>
   <head>
+    <title>Supreme Court Majority Simulator</title>
+    <meta property="og:url"           content="www.supremecourtmajoritysimulator.com" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Supreme Court Majority Simulator" />
+    <meta property="og:description"   content="A simple model to simulate Supreme Court majority for the next 100 years." />
     <link rel="stylesheet" src="court.css">
     <script type="application/javascript" src="court.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VRFFSJDKFX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-VRFFSJDKFX');
+    </script>
+    <script>window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));</script>
 </head>
   <body class="body">
+      <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0&appId=262420317116262&autoLogAppEvents=1" nonce="YTFUxJ47"></script>
     <div class="form-style-5">
         <h1>Supreme Court Majority Simulation Model</h1>
-        <p> This is a simple model to simulate Supreme Court majority for the next 100 years.</p>
+        <p> A simple model to simulate Supreme Court majority for the next 100 years.</p>
         <h4>
             Assumptions:</h4>
             <ul class="assumptionList">
-                <li>Simulations are ran 538 times.</li>
+                <li>Simulations are ran 1000 times.</li>
                 <li>Amy Barret is confirmed.</li>
                 <li>Death rate is based on acturial life table.</li>
                 <li>New judge is between 45 to 65 years old.</li>
                 <li>New judge has 70% chance to be male.</li>
-                <li>No appointment on election year.</li>
+                <li>No appointment on election year if president and senate are opposing parties.</li>
                 <li>If President and Senate has split party preference a judge matching the president's preference will be confirmed.</li>
             </ul>
         <form>
@@ -168,10 +200,17 @@
                     </tr>
                 </table>
         </div>
+        <div class = "footer">
+            <div class="footer-item"><i>Elections have consequences.</i></div>
+            <div class="footer-item"><a class="twitter-share-button" data-size="small"
+  href="https://twitter.com/intent/tweet?text=I used the supreme court majority simulator and found that...">
+Tweet</a></div>
+            <div class="footer-item fb-share-button" data-href="http://www.supremecourtmajoritysimulator.com/" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.supremecourtmajoritysimulator.com%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+        </div>
     </div>
   </body>
   <script>
-  const simulationTimes = 538;
+  const simulationTimes = 1000;
      function initiatePresidentSlider(){
         var pSlider = document.getElementById("presidentRange");
         var dOutput= document.getElementById("dPresident");
@@ -280,157 +319,172 @@
      }
      document.getElementById("simulate").addEventListener('click', simulate);
   </script>
-</html>
-<style>
-#results.hidden {
-    display: none;
-}
-td {
-    text-align: center;
-}
-h1 {
-    border-bottom: 1px solid black;
-    text-align: center;
-}
-h2 {
-    padding-top:12px;
-    border-bottom:2px solid gray;
-    text-align: center;
-   	color: #303030;
-}
-.results-table {
-    margin: auto;
-    width: 80%;
-}
-.assumptionList {
-    padding-bottom: 10px;
-    border-bottom: 1px solid gray;
-}
-.slidecontainer {
-    padding: 8px;
-}
-.slidecontainer .slider {
-    display:inline-block;
-    width: 90%;
-}
-.form-style-5{
-	max-width: 500px;
-	padding: 10px 20px;
-	background: #f4f7f8;
-	margin: 10px auto;
-	padding: 20px;
-	background: #f4f7f8;
-	border-radius: 8px;
-	font-family: Georgia, "Times New Roman", Times, serif;
-}
-.form-style-5 fieldset{
-	border: none;
-	color: #303030;
-}
-.form-style-5 legend {
-	font-size: 1.4em;
-	margin-bottom: 10px;
-}
-.form-style-5 label {
-	display: block;
-	margin-bottom: 8px;
-}
-.form-style-5 input[type="text"],
-.form-style-5 input[type="date"],
-.form-style-5 input[type="datetime"],
-.form-style-5 input[type="email"],
-.form-style-5 input[type="number"],
-.form-style-5 input[type="search"],
-.form-style-5 input[type="time"],
-.form-style-5 input[type="url"],
-.form-style-5 textarea,
-.form-style-5 select {
-	font-family: Georgia, "Times New Roman", Times, serif;
-	background: rgba(255,255,255,.1);
-	border: none;
-	border-radius: 4px;
-	font-size: 15px;
-	margin: 0;
-	outline: 0;
-	padding: 10px;
-	width: 100%;
-	box-sizing: border-box; 
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box; 
-	background-color: #e8eeef;
-	color:#8a97a0;
-	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
-	box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
-	margin-bottom: 30px;
-	
-    height: 40px;
-    color:black;
-    background: white;
-}
+  <style>
+    .footer {
+        border-top: 1px solid gray;
+        margin-top: 150px;
+        padding-bottom: 16px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    .footer-item {
+        padding: 8px;
+    }
+    
+    .fb-share-button {
 
-.form-style-5 .number {
-	background: #1abc9c;
-	color: #fff;
-	height: 30px;
-	width: 30px;
-	display: inline-block;
-	font-size: 0.8em;
-	margin-right: 4px;
-	line-height: 30px;
-	text-align: center;
-	text-shadow: 0 1px 0 rgba(255,255,255,0.2);
-	border-radius: 15px 15px 15px 0px;
-}
-
-.form-style-5 input[type="submit"],
-.form-style-5 input[type="button"]
-{
-	position: relative;
-	display: block;
-	padding: 19px 39px 18px 39px;
-	color: #FFF;
-	margin: 0 auto;
-	background: #1abc9c;
-	font-size: 18px;
-	text-align: center;
-	font-style: normal;
-	width: 100%;
-	border: 1px solid #16a085;
-	border-width: 1px 1px 3px;
-	margin-bottom: 10px;
-}
-.form-style-5 input[type="submit"]:hover,
-.form-style-5 input[type="button"]:hover
-{
-	background: #109177;
-}
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;  
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%; 
-  background: #4CAF50;
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #4CAF50;
-  cursor: pointer;
-}
+    }
+    #results.hidden {
+        display: none;
+    }
+    td {
+        text-align: center;
+    }
+    h1 {
+        border-bottom: 1px solid black;
+        text-align: center;
+    }
+    h2 {
+        padding-top:12px;
+        border-bottom:2px solid gray;
+        text-align: center;
+       	color: #303030;
+    }
+    .results-table {
+        margin: auto;
+        width: 80%;
+    }
+    .assumptionList {
+        padding-bottom: 10px;
+        border-bottom: 1px solid gray;
+    }
+    .slidecontainer {
+        padding: 8px;
+    }
+    .slidecontainer .slider {
+        display:inline-block;
+        width: 90%;
+    }
+    .form-style-5{
+    	max-width: 500px;
+    	padding: 10px 20px;
+    	background: #f4f7f8;
+    	margin: 10px auto;
+    	padding: 20px;
+    	background: #f4f7f8;
+    	border-radius: 8px;
+    	font-family: Georgia, "Times New Roman", Times, serif;
+    }
+    .form-style-5 fieldset{
+    	border: none;
+    	color: #303030;
+    }
+    .form-style-5 legend {
+    	font-size: 1.4em;
+    	margin-bottom: 10px;
+    }
+    .form-style-5 label {
+    	display: block;
+    	margin-bottom: 8px;
+    }
+    .form-style-5 input[type="text"],
+    .form-style-5 input[type="date"],
+    .form-style-5 input[type="datetime"],
+    .form-style-5 input[type="email"],
+    .form-style-5 input[type="number"],
+    .form-style-5 input[type="search"],
+    .form-style-5 input[type="time"],
+    .form-style-5 input[type="url"],
+    .form-style-5 textarea,
+    .form-style-5 select {
+    	font-family: Georgia, "Times New Roman", Times, serif;
+    	background: rgba(255,255,255,.1);
+    	border: none;
+    	border-radius: 4px;
+    	font-size: 15px;
+    	margin: 0;
+    	outline: 0;
+    	padding: 10px;
+    	width: 100%;
+    	box-sizing: border-box; 
+    	-webkit-box-sizing: border-box;
+    	-moz-box-sizing: border-box; 
+    	background-color: #e8eeef;
+    	color:#8a97a0;
+    	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    	box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    	margin-bottom: 30px;
+    	
+        height: 40px;
+        color:black;
+        background: white;
+    }
+    
+    .form-style-5 .number {
+    	background: #1abc9c;
+    	color: #fff;
+    	height: 30px;
+    	width: 30px;
+    	display: inline-block;
+    	font-size: 0.8em;
+    	margin-right: 4px;
+    	line-height: 30px;
+    	text-align: center;
+    	text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+    	border-radius: 15px 15px 15px 0px;
+    }
+    
+    .form-style-5 input[type="submit"],
+    .form-style-5 input[type="button"]
+    {
+    	position: relative;
+    	display: block;
+    	padding: 19px 39px 18px 39px;
+    	color: #FFF;
+    	margin: 0 auto;
+    	background: #1abc9c;
+    	font-size: 18px;
+    	text-align: center;
+    	font-style: normal;
+    	width: 100%;
+    	border: 1px solid #16a085;
+    	border-width: 1px 1px 3px;
+    	margin-bottom: 10px;
+    }
+    .form-style-5 input[type="submit"]:hover,
+    .form-style-5 input[type="button"]:hover
+    {
+    	background: #109177;
+    }
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;  
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%; 
+      background: #4CAF50;
+      cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+    }
 </style>
+</html>
